@@ -1,0 +1,1 @@
+("~/Documents/Development/go/src/github.com/Eventarc/go-attendly/")

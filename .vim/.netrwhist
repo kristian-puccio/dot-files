@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/Users/kristian/Documents/Development/go/src/github.com/Eventarc/goa'
+let g:netrw_dirhist_2='/Users/kristian/Documents/Development/go/src/github.com/Eventarc/go-attendly/services'
+let g:netrw_dirhist_3='/usr/local/etc/nginx'
+let g:netrw_dirhist_4='/private/etc/moneytribe'
+let g:netrw_dirhist_5='/Users/kristian/Documents/Development/go/src/github.com/Eventarc/go-attendly/goa/test'
+let g:netrw_dirhist_6='/Users/kristian'
