@@ -30,16 +30,22 @@ Plug 'kristijanhusak/vim-multiple-cursors'
 Plug 'altercation/vim-colors-solarized'
 Plug 'flazz/vim-colorschemes'
 Plug 'majutsushi/tagbar'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tacahiroy/ctrlp-funky'
+"Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'itchyny/lightline.vim'
 "Plug 'klen/python-mode'
 "Plug 'TFenby/python-mode', { 'branch' : 'develop' }
 Plug 'yosiat/oceanic-next-vim'
-Plug 'marijnh/tern_for_vim'
-let g:tern_map_keys=1
-let g:tern_show_argument_hints='on_hold'
+"Plug 'marijnh/tern_for_vim'
+"let g:tern_map_keys=1
+"let g:tern_show_argument_hints='on_hold'
 "let g:tern_show_argument_hints='on_move'
+
+Plug 'tpope/vim-dispatch'
+Plug 'garyburd/go-explorer'
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'elzr/vim-json', {'for' : 'json'}
 
 Plug 'Lokaltog/vim-easymotion'
 Plug 'rking/ag.vim'
@@ -50,13 +56,15 @@ Plug 'Raimondi/delimitMate'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+"Plug 'facebook/vim-flow'
 
 "Plug 'mattn/gist-vim'
-Plug 'mxw/vim-jsx', { 'for': 'javascript' }
+Plug 'mxw/vim-jsx'
 Plug 'justinj/vim-react-snippets', { 'for': 'javascript' }
 Plug 'scrooloose/syntastic'
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'ramitos/jsctags', { 'for': 'javascript' }
+"Plug 'heavenshell/vim-jsdoc'
 
 " Visually sets marks
 Plug 'kshenoy/vim-signature'
@@ -71,7 +79,8 @@ Plug 'terryma/vim-expand-region'
 " Undo/Redo tree
 Plug 'sjl/gundo.vim'
 
-Plug 'FelikZ/ctrlp-py-matcher'
+"Plug 'FelikZ/ctrlp-py-matcher'
+"Plug 'JarrodCTaylor/vim-python-test-runner'
 
 "Plug 'evilpie/jsctags'
 "Plug 'sosmo/vim-easyreplace'
@@ -144,8 +153,8 @@ set showcmd          " show partial commands on the status line
 set showmatch        " when inserting braces, show me the alternate brace
 set ruler            " show the co-ordinates in the bottom-right of the screen
 set background=dark  " dont assume white-on-black with syntax highlighting
-"colorscheme monokai
-colorscheme Tomorrow-Night-Eighties
+colorscheme monokai
+"colorscheme Tomorrow-Night-Eighties
 set report=0         " inform me when yanking one line
 syntax enable        " use syntax highlighting 
 
@@ -254,20 +263,21 @@ let g:ctrlp_funky_syntax_highlight = 1
 nnoremap <Leader>l :CtrlPBuffer<Cr>
 
 " Set delay to prevent extra search
-let g:ctrlp_lazy_update = 350
+"let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
+"let g:ctrlp_lazy_update = 100
 
 " Do not clear filenames cache, to improve CtrlP startup
 " You can manualy clear it by <F5>
-let g:ctrlp_clear_cache_on_exit = 0
+"let g:ctrlp_clear_cache_on_exit = 0
 
 " Set no file limit, we are building a big project
-let g:ctrlp_max_files = 0
+"let g:ctrlp_max_files = 0
 
 " If ag is available use it as filename list generator instead of 'find'
-if executable("ag")
-	set grepprg=ag\ --nogroup\ --nocolor
-	let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g ""'
-endif
+"if executable("ag")
+"	set grepprg=ag\ --nogroup\ --nocolor
+"	let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g" '
+"endif
 
 
 
@@ -277,8 +287,14 @@ let g:go_auto_type_info = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
-let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_fmt_fail_silently = 1
+let g:go_highlight_space_tab_error = 0
+let g:go_highlight_array_whitespace_error = 0
+let g:go_highlight_trailing_whitespace_error = 0
+let g:go_highlight_extra_types = 0
+let g:go_highlight_operators = 0
+let g:go_dispatch_enabled = 1
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
@@ -305,23 +321,39 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 """" JSX
-"TODO:
-"let g:jsx_ext_required = 0
-"let g:jsx_pragma_required = 1
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
+let g:jsx_pragma_required = 0
 
 
 """" Syntastic
-"let g:syntastic_javascript_checkers = ['jsxhint']
+"let g:syntastic_go_checkers = ['go', 'golint', 'govet']
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_error_symbol = '☠'
+let g:syntastic_style_warning_symbol = '⚑'
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_enable_signs = 1
+"let g:syntastic_check_on_wq = 1
+"let g:syntastic_auto_loc_list = 1
+"highlight SyntasticErrorSign guifg=white guibg=red
+"highlight SyntasticStyleErrorSign guifg=white guibg=#2f0000  
+"highlight SyntasticErrorLine guibg=#2f0000  
+"highlight SyntasticError guibg=#2f0000  
+
+
+
+let g:syntastic_enable_python_checker = 0
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 
-		\ 'mode': 'passive', 
-		\ 'active_filetypes': ['javascript', 'javascript.jsx'],
-		\ 'passive_filetypes': ['go'] 
-	\ }
+"let g:syntastic_go_checkers = ['go', 'golint', 'govet']
+"let g:syntastic_always_populate_loc_list = 0
+"let g:syntastic_auto_loc_list = 0
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_mode_map = { 
+		"\ 'mode': 'passive', 
+		"\ 'active_filetypes': ['go','javascript', 'javascript.jsx']
+	"\ }
 
 
 """"" lightline
@@ -384,6 +416,11 @@ let g:tagbar_type_go = {
   "return "p@=RestoreRegister()\<cr>"
 "endfunction
 "vmap <silent> <expr> p <sid>Repl()
+
+
+" ==================== YouCompleteMe ====================
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_min_num_of_chars_for_completion = 1
 
 function! g:UltiSnips_Complete()
     call UltiSnips#ExpandSnippet()
